@@ -2,6 +2,7 @@ package testgroup.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import testgroup.model.Task;
 import java.util.List;
 
@@ -13,27 +14,27 @@ public class TaskServiceImpl implements TaskService{
     @Autowired
     private TaskDao taskDao;
 
-    @Override
+    @Transactional
     public List<Task> allTasks() {
         return taskDao.allTasks();
     }
 
-    @Override
+    @Transactional
     public void add(Task task) {
         taskDao.add(task);
     }
 
-    @Override
+    @Transactional
     public void delete(Task task) {
         taskDao.delete(task);
     }
 
-    @Override
+    @Transactional
     public void edit(Task task) {
         taskDao.edit(task);
     }
 
-    @Override
+    @Transactional
     public Task getById(int id) {
         return taskDao.getById(id);
     }

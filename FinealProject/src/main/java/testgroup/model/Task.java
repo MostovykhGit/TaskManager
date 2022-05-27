@@ -1,9 +1,20 @@
 package testgroup.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "tasks")
 public class Task {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "priority")
     private Integer priority;
+    @Column(name = "description")
     private String description;
+    @Column(name = "isDone")
     private boolean isDone;
 
     public void setId(Integer id) {

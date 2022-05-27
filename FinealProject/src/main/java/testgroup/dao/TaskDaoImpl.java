@@ -1,5 +1,8 @@
 package testgroup.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import testgroup.model.Task;
 import java.util.*;
@@ -8,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class TaskDaoImpl implements TaskDao{
     private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
-    private static Map<Integer, Task> tasks = new HashMap<>();
+    //private static Map<Integer, Task> tasks = new HashMap<>();
 
-    static {
+    /*static {
         Task task1 = new Task();
         task1.setId(AUTO_ID.getAndIncrement());
         task1.setPriority(5);
@@ -25,30 +28,39 @@ public class TaskDaoImpl implements TaskDao{
         task2.setDescription("to do a contest");
         task2.setIsDone(false);
         tasks.put(task2.getId(), task2);
-    }
-    @Override
-    public List<Task> allTasks() {
-        return new ArrayList<>(tasks.values());
+    }*/
+
+    private SessionFactory sessionFactory;
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
+    public List<Task> allTasks() {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Task").list();
+    }
     @Override
     public void add(Task task) {
-        task.setId(AUTO_ID.getAndIncrement());
-        tasks.put(task.getId(), task);
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(task);
     }
 
     @Override
     public void delete(Task task) {
-        tasks.remove(task.getId());
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(task);
     }
 
     @Override
     public void edit(Task task) {
-        tasks.put(task.getId(), task);
+        Session session = sessionFactory.getCurrentSession();
+        session.update(task);
     }
 
     @Override
     public Task getById(int id) {
-        return tasks.get(id);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Task.class, id);
     }
 }
